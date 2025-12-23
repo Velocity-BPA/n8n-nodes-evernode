@@ -1,0 +1,22 @@
+{
+	"node": "n8n-nodes-base.evernode",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development", "Data & Storage"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://docs.evernode.org"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://docs.evernode.org"
+			}
+		]
+	},
+	"alias": ["blockchain", "xrpl", "xahau", "hotpocket", "decentralized", "hosting", "smart contracts", "evr", "web3"],
+	"subcategories": {
+		"Development": ["Backend Development"]
+	}
+}
