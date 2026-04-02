@@ -1,360 +1,243 @@
 # n8n-nodes-evernode
 
-[Velocity BPA Licensing Notice]
+> **[Velocity BPA Licensing Notice]**
+>
+> This n8n node is licensed under the Business Source License 1.1 (BSL 1.1).
+>
+> Use of this node by for-profit organizations in production environments requires a commercial license from Velocity BPA.
+>
+> For licensing information, visit https://velobpa.com/licensing or contact licensing@velobpa.com.
 
-This n8n node is licensed under the Business Source License 1.1 (BSL 1.1).
+This n8n community node provides comprehensive integration with Evernode, a decentralized infrastructure platform. It includes 5 resources covering host management, instance operations, smart contracts, reputation tracking, and transaction monitoring capabilities for seamless Evernode automation.
 
-Use of this node by for-profit organizations in production environments requires a commercial license from Velocity BPA.
-
-For licensing information, visit https://velobpa.com/licensing or contact licensing@velobpa.com.
-
----
-
-A comprehensive n8n community node package for interacting with the [Evernode](https://evernode.org) decentralized hosting network. This toolkit enables workflow automation for hosts, tenants, smart contract interactions, and the EVR token ecosystem.
-
-## Table of Contents
-
-- [Features](#features)
-- [Installation](#installation)
-- [Credentials](#credentials)
-- [Nodes](#nodes)
-- [Resources & Operations](#resources--operations)
-- [Use Cases](#use-cases)
-- [Development](#development)
-- [Testing](#testing)
-- [Licensing](#licensing)
-- [Author](#author)
+![n8n Community Node](https://img.shields.io/badge/n8n-Community%20Node-blue)
+![License](https://img.shields.io/badge/license-BSL--1.1-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)
+![Evernode](https://img.shields.io/badge/Evernode-Compatible-green)
+![XRPL](https://img.shields.io/badge/XRPL-Integrated-orange)
+![Decentralized](https://img.shields.io/badge/Infrastructure-Decentralized-purple)
 
 ## Features
 
-- **Account Management**: Query balances, trustlines, and transaction history
-- **EVR Token Operations**: Check balances, token info, and issuer details
-- **Host Operations**: Query host information, active hosts, and reputation
-- **Tenant Operations**: Manage tenant accounts and leases
-- **Lease Management**: Calculate costs, query lease info, and track active leases
-- **Registry Queries**: Access network registry and moment information
-- **Reputation System**: Query and analyze host reputation scores
-- **Pricing Calculations**: Calculate lease costs with various parameters
-- **Network Statistics**: Monitor network health and server info
-- **Real-time Triggers**: React to network events like moment changes, leases, and EVR transfers
+- **Host Management** - Monitor and manage Evernode hosts including registration, updates, and status tracking
+- **Instance Operations** - Create, deploy, scale, and terminate application instances across the Evernode network
+- **Smart Contract Integration** - Execute and monitor smart contracts with full transaction lifecycle management
+- **Reputation System** - Track host and instance reputation scores for optimal resource allocation
+- **Transaction Monitoring** - Real-time transaction tracking with detailed status and confirmation handling
+- **XRPL Integration** - Native XRPL ledger support for payments and asset transfers
+- **Network Analytics** - Comprehensive network statistics and performance monitoring
+- **Automated Scaling** - Dynamic resource allocation based on demand and performance metrics
 
 ## Installation
 
-### Via n8n Community Nodes
+### Community Nodes (Recommended)
 
-1. Open your n8n instance
+1. Open n8n
 2. Go to **Settings** → **Community Nodes**
-3. Click **Install**
+3. Click **Install a community node**
 4. Enter `n8n-nodes-evernode`
 5. Click **Install**
 
 ### Manual Installation
 
 ```bash
-# Navigate to your n8n custom nodes directory
-cd ~/.n8n/custom
-
-# Install the package
+cd ~/.n8n
 npm install n8n-nodes-evernode
-
-# Restart n8n
-n8n start
 ```
 
-### From Source
+### Development Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/Velocity-BPA/n8n-nodes-evernode.git
 cd n8n-nodes-evernode
-
-# Install dependencies
 npm install
-
-# Build the package
 npm run build
-
-# Link to n8n
-npm link
-cd ~/.n8n/custom
-npm link n8n-nodes-evernode
-
-# Restart n8n
+mkdir -p ~/.n8n/custom
+ln -s $(pwd) ~/.n8n/custom/n8n-nodes-evernode
 n8n start
 ```
 
-## Credentials
+## Credentials Setup
 
-### Evernode Network
-
-Primary credentials for Evernode operations:
-
-| Field | Description |
-|-------|-------------|
-| Network | Mainnet, Testnet, or Custom |
-| XRPL WebSocket URL | WebSocket URL (custom networks only) |
-| Registry Address | Registry contract address (custom only) |
-| Wallet Seed | Your wallet secret seed |
-| Wallet Mnemonic | Optional mnemonic phrase |
-| Account Type | General, Host, or Tenant |
-
-### XRPL/Xahau Credentials
-
-For direct ledger operations:
-
-| Field | Description |
-|-------|-------------|
-| Network | Xahau Mainnet/Testnet, XRPL Mainnet/Testnet, Custom |
-| WebSocket URL | Custom endpoint URL |
-| Wallet Seed | Wallet secret seed |
-| Regular Key | Optional regular key |
-
-### HotPocket Credentials
-
-For smart contract interactions:
-
-| Field | Description |
-|-------|-------------|
-| Node URL | HotPocket WebSocket URL |
-| User Private Key | ed25519 private key |
-| User Public Key | ed25519 public key |
-| Contract Address | Contract identifier |
-
-## Nodes
-
-### Evernode (Action Node)
-
-The main action node for all Evernode operations.
-
-### Evernode Trigger
-
-Event-driven triggers for real-time automation:
-
-- Host Registered/Deregistered
-- Host Heartbeat
-- Lease Acquired/Extended/Terminated
-- Moment Changed
-- Reward Claimed
-- EVR Received/Sent
+| Field | Description | Required |
+|-------|-------------|----------|
+| API Key | Your Evernode API access key | Yes |
+| Environment | Production or Testnet environment | Yes |
+| Wallet Secret | XRPL wallet secret for transaction signing | Yes |
+| Base URL | Custom Evernode API endpoint (optional) | No |
 
 ## Resources & Operations
 
-### Account Resource
+### 1. Host
 
 | Operation | Description |
 |-----------|-------------|
-| Get Account Info | Retrieve account details |
-| Get XRP Balance | Get native token balance |
-| Get EVR Balance | Get EVR token balance |
-| Get Trustlines | List account trustlines |
-| Get Transactions | Get transaction history |
-| Validate Address | Validate XRPL address format |
+| Get | Retrieve host information and current status |
+| List | Get all available hosts with filtering options |
+| Register | Register a new host on the Evernode network |
+| Update | Update host configuration and metadata |
+| Deregister | Remove host from the network |
+| Get Stats | Retrieve host performance statistics |
+| Get Reputation | Get current host reputation score |
 
-### EVR Token Resource
-
-| Operation | Description |
-|-----------|-------------|
-| Get Balance | Get EVR balance for address |
-| Get Token Info | Get EVR token details |
-
-### Host Resource
+### 2. Instance
 
 | Operation | Description |
 |-----------|-------------|
-| Get Host Info | Get host account details |
-| Get Active Hosts | List active network hosts |
+| Create | Deploy a new application instance |
+| Get | Retrieve instance details and status |
+| List | Get all instances with filtering and pagination |
+| Update | Modify instance configuration |
+| Start | Start a stopped instance |
+| Stop | Stop a running instance |
+| Restart | Restart an existing instance |
+| Delete | Permanently delete an instance |
+| Get Logs | Retrieve instance execution logs |
+| Scale | Scale instance resources up or down |
 
-### Tenant Resource
-
-| Operation | Description |
-|-----------|-------------|
-| Get Tenant Info | Get tenant account details |
-| Get Tenant Leases | List tenant's active leases |
-
-### Lease Resource
-
-| Operation | Description |
-|-----------|-------------|
-| Get Lease Info | Get lease details by token ID |
-| Calculate Cost | Calculate lease cost |
-
-### Registry Resource
+### 3. Contract
 
 | Operation | Description |
 |-----------|-------------|
-| Get Registry Info | Get registry configuration |
-| Get Moment Info | Get current moment details |
+| Deploy | Deploy a new smart contract |
+| Execute | Execute contract functions |
+| Get | Retrieve contract details and state |
+| List | Get all deployed contracts |
+| Update | Update contract parameters |
+| Get State | Retrieve current contract state |
+| Get History | Get contract execution history |
+| Estimate Gas | Estimate execution costs |
 
-### Reputation Resource
-
-| Operation | Description |
-|-----------|-------------|
-| Get Reputation Tier | Calculate reputation tier from score |
-
-### Moment Resource
-
-| Operation | Description |
-|-----------|-------------|
-| Get Current Moment | Get current network moment |
-
-### Pricing Resource
+### 4. Reputation
 
 | Operation | Description |
 |-----------|-------------|
-| Calculate Lease Price | Calculate total lease cost |
+| Get Host Score | Retrieve reputation score for a specific host |
+| Get Instance Score | Get reputation metrics for an instance |
+| List Rankings | Get reputation rankings across the network |
+| Submit Rating | Submit a reputation rating |
+| Get History | Retrieve reputation score history |
+| Get Metrics | Get detailed reputation metrics |
 
-### Network Resource
-
-| Operation | Description |
-|-----------|-------------|
-| Get Network Info | Get network configuration |
-| Get Server Info | Get server status |
-
-### Utility Resource
+### 5. Transaction
 
 | Operation | Description |
 |-----------|-------------|
-| Validate Address | Validate XRPL address |
-| Convert Units | Convert drops to XRP and vice versa |
-| Get Ledger Info | Get current ledger information |
+| Submit | Submit a new transaction to the network |
+| Get | Retrieve transaction details and status |
+| List | Get transaction history with filtering |
+| Get Status | Check current transaction status |
+| Monitor | Monitor transaction confirmations |
+| Get Receipt | Retrieve transaction receipt |
+| Cancel | Cancel a pending transaction |
+| Estimate Fee | Estimate transaction fees |
 
-## Use Cases
-
-### Monitor Host Performance
+## Usage Examples
 
 ```javascript
-// Workflow: Host Monitoring
-// 1. Evernode Trigger (Moment Changed)
-// 2. Evernode (Get Host Info)
-// 3. IF (Reputation < 50)
-// 4. Slack (Send Alert)
+// Deploy a new application instance
+{
+  "resource": "instance",
+  "operation": "create",
+  "hostId": "rDL8gqQJaJG9MvJzxERmKVZnkKMk7XgcXt",
+  "config": {
+    "image": "my-app:latest",
+    "memory": 512,
+    "cpu": 1,
+    "environment": {
+      "NODE_ENV": "production"
+    }
+  }
+}
 ```
-
-### Track EVR Payments
 
 ```javascript
-// Workflow: EVR Payment Tracking
-// 1. Evernode Trigger (EVR Received)
-// 2. Evernode (Get Account Info)
-// 3. Google Sheets (Log Transaction)
+// Monitor host reputation scores
+{
+  "resource": "reputation",
+  "operation": "getHostScore",
+  "hostId": "rDL8gqQJaJG9MvJzxERmKVZnkKMk7XgcXt",
+  "timeframe": "30d"
+}
 ```
-
-### Lease Cost Calculator
 
 ```javascript
-// Workflow: Cost Estimation
-// 1. Webhook (Receive Requirements)
-// 2. Evernode (Calculate Lease Price)
-// 3. Respond to Webhook
+// Execute a smart contract function
+{
+  "resource": "contract",
+  "operation": "execute",
+  "contractId": "0x742d35Cc6669C542d46a44b2Bf68A7b448E7D60C",
+  "function": "transfer",
+  "parameters": {
+    "to": "rPEPPER7kfTD9w2To4CQk6UCfuHM9c6GDY",
+    "amount": "100"
+  }
+}
 ```
-
-### Network Health Dashboard
 
 ```javascript
-// Workflow: Health Check
-// 1. Schedule Trigger (Every Hour)
-// 2. Evernode (Get Network Info)
-// 3. Evernode (Get Server Info)
-// 4. InfluxDB (Store Metrics)
+// Track transaction status
+{
+  "resource": "transaction",
+  "operation": "getStatus",
+  "transactionHash": "F4AB442A6D4CBB935D66E1DA7309A5FC71C7143ED4049053EC14E3875B0CF9BF",
+  "includeDetails": true
+}
 ```
+
+## Error Handling
+
+| Error | Description | Solution |
+|-------|-------------|----------|
+| Invalid API Key | Authentication failed with provided credentials | Verify API key is correct and active |
+| Host Not Found | Specified host ID does not exist | Check host ID and ensure host is registered |
+| Insufficient Funds | Not enough balance for transaction | Add funds to wallet or reduce transaction amount |
+| Network Congestion | High network load causing delays | Retry with higher gas fees or wait for lower congestion |
+| Contract Error | Smart contract execution failed | Check contract parameters and state requirements |
+| Rate Limit Exceeded | Too many API requests in time window | Implement request throttling and retry logic |
 
 ## Development
 
-### Prerequisites
-
-- Node.js v18 or higher
-- npm v8 or higher
-- n8n installed locally
-
-### Setup
-
 ```bash
-# Clone repository
-git clone https://github.com/Velocity-BPA/n8n-nodes-evernode.git
-cd n8n-nodes-evernode
-
-# Install dependencies
 npm install
-
-# Build
 npm run build
-
-# Development mode with watch
-npm run build:watch
-```
-
-### Project Structure
-
-```
-n8n-nodes-evernode/
-├── credentials/
-│   ├── EvernodeNetwork.credentials.ts
-│   ├── XrplCredentials.credentials.ts
-│   └── HotPocket.credentials.ts
-├── nodes/
-│   └── Evernode/
-│       ├── Evernode.node.ts
-│       ├── EvernodeTrigger.node.ts
-│       ├── evernode.svg
-│       ├── constants/
-│       ├── transport/
-│       └── utils/
-├── test/
-├── package.json
-├── tsconfig.json
-├── LICENSE
-├── COMMERCIAL_LICENSE.md
-├── LICENSING_FAQ.md
-└── README.md
-```
-
-## Testing
-
-```bash
-# Run all tests
 npm test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run specific test file
-npm test -- --testPathPattern=utils
-
-# Run integration tests (requires network)
-RUN_NETWORK_TESTS=true npm test -- --testPathPattern=integration
+npm run lint
+npm run dev
 ```
+
+## Author
+
+**Velocity BPA**
+- Website: [velobpa.com](https://velobpa.com)
+- GitHub: [Velocity-BPA](https://github.com/Velocity-BPA)
 
 ## Licensing
 
 This n8n community node is licensed under the **Business Source License 1.1**.
 
 ### Free Use
-
 Permitted for personal, educational, research, and internal business use.
 
 ### Commercial Use
-
 Use of this node within any SaaS, PaaS, hosted platform, managed service, or paid automation offering requires a commercial license.
 
 For licensing inquiries: **licensing@velobpa.com**
 
 See [LICENSE](LICENSE), [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md), and [LICENSING_FAQ.md](LICENSING_FAQ.md) for details.
 
-## Author
+## Contributing
 
-**Velocity BPA**
+Contributions are welcome! Please ensure:
 
-- Website: [velobpa.com](https://velobpa.com)
-- GitHub: [Velocity-BPA](https://github.com/Velocity-BPA)
+1. Code follows existing style conventions
+2. All tests pass (`npm test`)
+3. Linting passes (`npm run lint`)
+4. Documentation is updated for new features
+5. Commit messages are descriptive
 
 ## Support
 
-- [GitHub Issues](https://github.com/Velocity-BPA/n8n-nodes-evernode/issues)
-- [Evernode Documentation](https://docs.evernode.org)
-- [n8n Community](https://community.n8n.io)
-
-## Acknowledgments
-
-- [Evernode](https://evernode.org) - Decentralized hosting network
-- [XRPL](https://xrpl.org) - XRP Ledger
-- [n8n](https://n8n.io) - Workflow automation platform
+- **Issues**: [GitHub Issues](https://github.com/Velocity-BPA/n8n-nodes-evernode/issues)
+- **Evernode Documentation**: [docs.evernode.org](https://docs.evernode.org)
+- **XRPL Developer Portal**: [xrpl.org/docs](https://xrpl.org/docs)
