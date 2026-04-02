@@ -38,7 +38,8 @@ export class Evernode implements INodeType {
 					{ name: 'Lease', value: 'lease' }, { name: 'Registry', value: 'registry' },
 					{ name: 'Reputation', value: 'reputation' }, { name: 'Moment', value: 'moment' },
 					{ name: 'Pricing', value: 'pricing' }, { name: 'Network', value: 'network' },
-					{ name: 'Utility', value: 'utility' },
+					{ name: 'Utility', value: 'utility' }, { name: 'Instance', value: 'instance' },
+					{ name: 'Contract', value: 'contract' }, { name: 'Transaction', value: 'transaction' },
 				], default: 'account' },
 			{ displayName: 'Operation', name: 'operation', type: 'options', noDataExpression: true,
 				displayOptions: { show: { resource: ['account'] } },
@@ -61,6 +62,10 @@ export class Evernode implements INodeType {
 				options: [
 					{ name: 'Get Host Info', value: 'getHostInfo', action: 'Get host info' },
 					{ name: 'Get Active Hosts', value: 'getActiveHosts', action: 'Get active hosts' },
+					{ name: 'Get All Hosts', value: 'getAllHosts', action: 'Get all hosts' },
+					{ name: 'Register Host', value: 'registerHost', action: 'Register host' },
+					{ name: 'Update Host', value: 'updateHost', action: 'Update host' },
+					{ name: 'Deregister Host', value: 'deregisterHost', action: 'Deregister host' },
 				], default: 'getHostInfo' },
 			{ displayName: 'Operation', name: 'operation', type: 'options', noDataExpression: true,
 				displayOptions: { show: { resource: ['tenant'] } },
@@ -82,8 +87,14 @@ export class Evernode implements INodeType {
 				], default: 'getRegistryInfo' },
 			{ displayName: 'Operation', name: 'operation', type: 'options', noDataExpression: true,
 				displayOptions: { show: { resource: ['reputation'] } },
-				options: [{ name: 'Get Reputation Tier', value: 'getReputationTier', action: 'Get reputation tier' }],
-				default: 'getReputationTier' },
+				options: [
+					{ name: 'Get Reputation Tier', value: 'getReputationTier', action: 'Get reputation tier' },
+					{ name: 'Get All Reputations', value: 'getAllReputations', action: 'Get all reputations' },
+					{ name: 'Get Reputation', value: 'getReputation', action: 'Get reputation' },
+					{ name: 'Create Reputation Score', value: 'createReputationScore', action: 'Create reputation score' },
+					{ name: 'Update Reputation', value: 'updateReputation', action: 'Update reputation' },
+					{ name: 'Get Reputation History', value: 'getReputationHistory', action: 'Get reputation history' },
+				], default: 'getReputationTier' },
 			{ displayName: 'Operation', name: 'operation', type: 'options', noDataExpression: true,
 				displayOptions: { show: { resource: ['moment'] } },
 				options: [{ name: 'Get Current Moment', value: 'getCurrentMoment', action: 'Get current moment' }],
@@ -105,8 +116,35 @@ export class Evernode implements INodeType {
 					{ name: 'Convert Units', value: 'convertUnits', action: 'Convert units' },
 					{ name: 'Get Ledger Info', value: 'getLedgerInfo', action: 'Get ledger info' },
 				], default: 'validateAddress' },
+			{ displayName: 'Operation', name: 'operation', type: 'options', noDataExpression: true,
+				displayOptions: { show: { resource: ['instance'] } },
+				options: [
+					{ name: 'Get All Instances', value: 'getAllInstances', action: 'Get all instances' },
+					{ name: 'Get Instance', value: 'getInstance', action: 'Get instance' },
+					{ name: 'Create Instance', value: 'createInstance', action: 'Create instance' },
+					{ name: 'Update Instance', value: 'updateInstance', action: 'Update instance' },
+					{ name: 'Delete Instance', value: 'deleteInstance', action: 'Delete instance' },
+				], default: 'getAllInstances' },
+			{ displayName: 'Operation', name: 'operation', type: 'options', noDataExpression: true,
+				displayOptions: { show: { resource: ['contract'] } },
+				options: [
+					{ name: 'Get All Contracts', value: 'getAllContracts', action: 'Get all contracts' },
+					{ name: 'Get Contract', value: 'getContract', action: 'Get contract' },
+					{ name: 'Deploy Contract', value: 'deployContract', action: 'Deploy contract' },
+					{ name: 'Update Contract', value: 'updateContract', action: 'Update contract' },
+					{ name: 'Delete Contract', value: 'deleteContract', action: 'Delete contract' },
+				], default: 'getAllContracts' },
+			{ displayName: 'Operation', name: 'operation', type: 'options', noDataExpression: true,
+				displayOptions: { show: { resource: ['transaction'] } },
+				options: [
+					{ name: 'Get All Transactions', value: 'getAllTransactions', action: 'Get all transactions' },
+					{ name: 'Get Transaction', value: 'getTransaction', action: 'Get transaction' },
+					{ name: 'Create Transaction', value: 'createTransaction', action: 'Create transaction' },
+					{ name: 'Get Balance', value: 'getBalance', action: 'Get balance' },
+					{ name: 'Get Transaction History', value: 'getTransactionHistory', action: 'Get transaction history' },
+				], default: 'getAllTransactions' },
 			{ displayName: 'Address', name: 'address', type: 'string', default: '', placeholder: 'rXXXX...',
-				displayOptions: { show: { resource: ['account', 'evr', 'host', 'tenant'], operation: ['getAccountInfo', 'getXrpBalance', 'getEvrBalance', 'getTrustlines', 'getTransactions', 'getBalance', 'getHostInfo', 'getTenantInfo', 'getTenantLeases'] } } },
+				displayOptions: { show: { resource: ['account', 'evr', 'host', 'tenant', 'transaction'], operation: ['getAccountInfo', 'getXrpBalance', 'getEvrBalance', 'getTrustlines', 'getTransactions', 'getBalance', 'getHostInfo', 'getTenantInfo', 'getTenantLeases', 'getTransactionHistory'] } } },
 			{ displayName: 'Token ID', name: 'tokenId', type: 'string', default: '',
 				displayOptions: { show: { resource: ['lease'], operation: ['getLeaseInfo'] } } },
 			{ displayName: 'Lease Amount (EVR)', name: 'leaseAmount', type: 'number', default: 1,
@@ -116,7 +154,7 @@ export class Evernode implements INodeType {
 			{ displayName: 'Instance Count', name: 'instanceCount', type: 'number', default: 1,
 				displayOptions: { show: { resource: ['lease', 'pricing'], operation: ['calculateCost', 'calculateLeasePrice'] } } },
 			{ displayName: 'Limit', name: 'limit', type: 'number', default: 20,
-				displayOptions: { show: { resource: ['account'], operation: ['getTransactions'] } } },
+				displayOptions: { show: { resource: ['account', 'host', 'instance', 'contract', 'reputation', 'transaction'], operation: ['getTransactions', 'getAllHosts', 'getAllInstances', 'getAllContracts', 'getAllReputations', 'getAllTransactions', 'getTransactionHistory'] } } },
 			{ displayName: 'Address to Validate', name: 'addressToValidate', type: 'string', default: '',
 				displayOptions: { show: { resource: ['account', 'utility'], operation: ['validateAddress'] } } },
 			{ displayName: 'Amount', name: 'amount', type: 'string', default: '0',
@@ -126,128 +164,687 @@ export class Evernode implements INodeType {
 				default: 'dropsToXrp', displayOptions: { show: { resource: ['utility'], operation: ['convertUnits'] } } },
 			{ displayName: 'Reputation Score', name: 'reputationScore', type: 'number', default: 50,
 				displayOptions: { show: { resource: ['reputation'], operation: ['getReputationTier'] } } },
+			{ displayName: 'Status', name: 'status', type: 'options',
+				options: [
+					{ name: 'Active', value: 'active' }, { name: 'Inactive', value: 'inactive' }, 
+					{ name: 'Maintenance', value: 'maintenance' }, { name: 'Running', value: 'running' },
+					{ name: 'Stopped', value: 'stopped' }, { name: 'Deploying', value: 'deploying' },
+					{ name: 'Failed', value: 'failed' }, { name: 'All', value: '' },
+				],
+				default: '', displayOptions: { show: { resource: ['host', 'instance', 'contract', 'transaction'], operation: ['getAllHosts', 'getAllInstances', 'getAllContracts', 'getAllTransactions'] } } },
+			{ displayName: 'Region', name: 'region', type: 'string', default: '',
+				displayOptions: { show: { resource: ['host'], operation: ['getAllHosts'] } } },
+			{ displayName: 'Offset', name: 'offset', type: 'number', default: 0,
+				displayOptions: { show: { resource: ['host', 'instance', 'contract', 'reputation', 'transaction'], operation: ['getAllHosts', 'getAllInstances', 'getAllContracts', 'getAllReputations', 'getAllTransactions', 'getTransactionHistory'] } } },
+			{ displayName: 'Host Address', name: 'hostAddress', type: 'string', default: '', required: true,
+				displayOptions: { show: { resource: ['host', 'instance', 'reputation'], operation: ['getHost', 'updateHost', 'deregisterHost', 'registerHost', 'createInstance', 'getReputation', 'createReputationScore', 'updateReputation', 'getReputationHistory'] } } },
+			{ displayName: 'Country', name: 'country', type: 'string', default: '', required: true,
+				displayOptions: { show: { resource: ['host'], operation: ['registerHost'] } } },
+			{ displayName: 'CPU', name: 'cpu', type: 'number', default: 1,
+				displayOptions: { show: { resource: ['host'], operation: ['registerHost', 'updateHost'] } } },
+			{ displayName: 'Memory', name: 'memory', type: 'number', default: 1024,
+				displayOptions: { show: { resource: ['host'], operation: ['registerHost', 'updateHost'] } } },
+			{ displayName: 'Storage', name: 'storage', type: 'number', default: 10240,
+				displayOptions: { show: { resource: ['host'], operation: ['registerHost', 'updateHost'] } } },
+			{ displayName: 'Description', name: 'description', type: 'string', default: '',
+				displayOptions: { show: { resource: ['host', 'contract'], operation: ['registerHost', 'updateHost', 'deployContract'] } } },
+			{ displayName: 'Instance ID', name: 'instanceId', type: 'string', required: true, default: '',
+				displayOptions: { show: { resource: ['instance'], operation: ['getInstance', 'updateInstance', 'deleteInstance'] } } },
+			{ displayName: 'Contract Code', name: 'contractCode', type: 'string', required: true, default: '',
+				displayOptions: { show: { resource: ['instance', 'contract'], operation: ['createInstance', 'deployContract', 'updateContract'] } } },
+			{ displayName: 'Duration (Hours)', name: 'duration', type: 'number', required: true, default: 24,
+				displayOptions: { show: { resource: ['instance'], operation: ['createInstance'] } } },
+			{ displayName: 'Contract ID', name: 'contractId', type: 'string', required: true, default: '',
+				displayOptions: { show: { resource: ['contract'], operation: ['getContract', 'updateContract', 'deleteContract'] } } },
+			{ displayName: 'Name', name: 'name', type: 'string', required: true, default: '',
+				displayOptions: { show: { resource: ['contract'], operation: ['deployContract'] } } },
+			{ displayName: 'Parameters', name: 'parameters', type: 'json', default: '{}',
+				displayOptions: { show: { resource: ['contract'], operation: ['deployContract', 'updateContract'] } } },
+			{ displayName: 'Type', name: 'type', type: 'string', default: '',
+				displayOptions: { show: { resource: ['contract', 'transaction'], operation: ['getAllContracts', 'getAllTransactions'] } } },
+			{ displayName: 'Minimum Score', name: 'minScore', type: 'number', default: 0,
+				displayOptions: { show: { resource: ['reputation'], operation: ['getAllReputations'] } } },
+			{ displayName: 'Score', name: 'score', type: 'number', default: 0,
+				displayOptions: { show: { resource: ['reputation'], operation: ['createReputationScore', 'updateReputation'] } } },
+			{ displayName: 'Metrics', name: 'metrics', type: 'json', default: '{}',
+				displayOptions: { show: { resource: ['reputation'], operation: ['createReputationScore'] } } },
+			{ displayName: 'Uptime', name: 'uptime', type: 'number', default: 0,
+				displayOptions: { show: { resource: ['reputation'], operation: ['updateReputation'] } } },
+			{ displayName: 'Performance', name: 'performance', type: 'number', default: 0,
+				displayOptions: { show: { resource: ['reputation'], operation: ['updateReputation'] } } },
+			{ displayName: 'From Date', name: 'fromDate', type: 'dateTime', default: '',
+				displayOptions: { show: { resource: ['reputation', 'transaction'], operation: ['getReputationHistory', 'getAllTransactions'] } } },
+			{ displayName: 'To Date', name: 'toDate', type: 'dateTime', default: '',
+				displayOptions: { show: { resource: ['reputation', 'transaction'], operation: ['getReputationHistory', 'getAllTransactions'] } } },
+			{ displayName: 'Transaction Hash', name: 'txHash', type: 'string', required: true, default: '',
+				displayOptions: { show: { resource: ['transaction'], operation: ['getTransaction'] } } },
+			{ displayName: 'Destination', name: 'destination', type: 'string', required: true, default: '',
+				displayOptions: { show: { resource: ['transaction'], operation: ['createTransaction'] } } },
+			{ displayName: 'Memo', name: 'memo', type: 'string', default: '',
+				displayOptions: { show: { resource: ['transaction'], operation: ['createTransaction'] } } },
+			{ displayName: 'Transaction Type', name: 'transactionType', type: 'options',
+				options: [{ name: 'Transfer', value: 'transfer' }, { name: 'Smart Contract', value: 'smart_contract' }, { name: 'HotPocket', value: 'hotpocket' }],
+				default: 'transfer', displayOptions: { show: { resource: ['transaction'], operation: ['createTransaction'] } } },
 		],
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
-		const returnData: INodeExecutionData[] = [];
 		const resource = this.getNodeParameter('resource', 0) as string;
-		const operation = this.getNodeParameter('operation', 0) as string;
-		const credentials = await this.getCredentials('evernodeNetwork');
-		const config = getNetworkConfigFromCredentials(credentials);
 
-		for (let i = 0; i < items.length; i++) {
-			try {
-				let result: any = { success: false };
+		switch (resource) {
+			case 'account':
+			case 'evr':
+			case 'host':
+			case 'tenant':
+			case 'lease':
+			case 'registry':
+			case 'reputation':
+			case 'moment':
+			case 'pricing':
+			case 'network':
+			case 'utility':
+				return [await executeExistingOperations.call(this, items, resource)];
+			case 'instance':
+				return [await executeInstanceOperations.call(this, items)];
+			case 'contract':
+				return [await executeContractOperations.call(this, items)];
+			case 'transaction':
+				return [await executeTransactionOperations.call(this, items)];
+			default:
+				throw new NodeOperationError(this.getNode(), `The resource "${resource}" is not supported`);
+		}
+	}
+}
 
-				if (resource === 'account') {
-					const address = operation !== 'validateAddress' ? this.getNodeParameter('address', i) as string : '';
-					if (operation === 'getAccountInfo') {
-						if (!isValidXrplAddress(address)) throw new NodeOperationError(this.getNode(), 'Invalid address', { itemIndex: i });
-						result = { success: true, data: await getAccountInfo(this, config, address) };
-					} else if (operation === 'getXrpBalance') {
-						const info = await getAccountInfo(this, config, address) as any;
-						result = { success: true, address, balance: dropsToXrp(info?.account_data?.Balance || '0'), currency: 'XAH' };
-					} else if (operation === 'getEvrBalance') {
-						const lines = await getAccountLines(this, config, address) as any;
-						const evr = lines?.lines?.find((l: any) => l.currency === 'EVR' && l.account === config.evrIssuer);
-						result = { success: true, address, balance: evr?.balance || '0', currency: 'EVR' };
-					} else if (operation === 'getTrustlines') {
-						const lines = await getAccountLines(this, config, address);
-						result = { success: true, address, trustlines: (lines as any)?.lines || [] };
-					} else if (operation === 'getTransactions') {
-						const limit = this.getNodeParameter('limit', i) as number;
-						const txs = await getAccountTransactions(this, config, address, limit);
-						result = { success: true, address, transactions: (txs as any)?.transactions || [] };
-					} else if (operation === 'validateAddress') {
-						const addr = this.getNodeParameter('addressToValidate', i) as string;
-						result = { success: true, address: addr, valid: isValidXrplAddress(addr) };
-					}
-				} else if (resource === 'evr') {
+async function executeExistingOperations(
+	this: IExecuteFunctions,
+	items: INodeExecutionData[],
+	resource: string,
+): Promise<INodeExecutionData[]> {
+	const returnData: INodeExecutionData[] = [];
+	const operation = this.getNodeParameter('operation', 0) as string;
+	const credentials = await this.getCredentials('evernodeNetwork');
+	const config = getNetworkConfigFromCredentials(credentials);
+
+	for (let i = 0; i < items.length; i++) {
+		try {
+			let result: any = { success: false };
+
+			if (resource === 'account') {
+				const address = operation !== 'validateAddress' ? this.getNodeParameter('address', i) as string : '';
+				if (operation === 'getAccountInfo') {
+					if (!isValidXrplAddress(address)) throw new NodeOperationError(this.getNode(), 'Invalid address', { itemIndex: i });
+					result = { success: true, data: await getAccountInfo(this, config, address) };
+				} else if (operation === 'getXrpBalance') {
+					const info = await getAccountInfo(this, config, address) as any;
+					result = { success: true, address, balance: dropsToXrp(info?.account_data?.Balance || '0'), currency: 'XAH' };
+				} else if (operation === 'getEvrBalance') {
+					const lines = await getAccountLines(this, config, address) as any;
+					const evr = lines?.lines?.find((l: any) => l.currency === 'EVR' && l.account === config.evrIssuer);
+					result = { success: true, address, balance: evr?.balance || '0', currency: 'EVR' };
+				} else if (operation === 'getTrustlines') {
+					const lines = await getAccountLines(this, config, address);
+					result = { success: true, address, trustlines: (lines as any)?.lines || [] };
+				} else if (operation === 'getTransactions') {
+					const limit = this.getNodeParameter('limit', i) as number;
+					const txs = await getAccountTransactions(this, config, address, limit);
+					result = { success: true, address, transactions: (txs as any)?.transactions || [] };
+				} else if (operation === 'validateAddress') {
+					const addr = this.getNodeParameter('addressToValidate', i) as string;
+					result = { success: true, address: addr, valid: isValidXrplAddress(addr) };
+				}
+			} else if (resource === 'evr') {
+				const address = this.getNodeParameter('address', i) as string;
+				if (operation === 'getBalance') {
+					const lines = await getAccountLines(this, config, address) as any;
+					const evr = lines?.lines?.find((l: any) => l.currency === 'EVR');
+					result = { success: true, address, balance: evr?.balance || '0', formatted: formatEvrAmount(evr?.balance || '0') };
+				} else if (operation === 'getTokenInfo') {
+					result = { success: true, currency: 'EVR', issuer: config.evrIssuer, decimals: EVR_TOKEN.DECIMALS, totalSupply: EVR_TOKEN.TOTAL_SUPPLY };
+				}
+			} else if (resource === 'host') {
+				if (operation === 'getHostInfo') {
 					const address = this.getNodeParameter('address', i) as string;
-					if (operation === 'getBalance') {
-						const lines = await getAccountLines(this, config, address) as any;
-						const evr = lines?.lines?.find((l: any) => l.currency === 'EVR');
-						result = { success: true, address, balance: evr?.balance || '0', formatted: formatEvrAmount(evr?.balance || '0') };
-					} else if (operation === 'getTokenInfo') {
-						result = { success: true, currency: 'EVR', issuer: config.evrIssuer, decimals: EVR_TOKEN.DECIMALS, totalSupply: EVR_TOKEN.TOTAL_SUPPLY };
-					}
-				} else if (resource === 'host') {
-					if (operation === 'getHostInfo') {
-						const address = this.getNodeParameter('address', i) as string;
-						const info = await getAccountInfo(this, config, address);
-						const objects = await makeXrplRequest(this, config, 'account_objects', [{ account: address, type: 'uri_token', ledger_index: 'validated' }]) as any;
-						result = { success: true, address, accountInfo: info, uriTokens: objects?.account_objects || [] };
-					} else if (operation === 'getActiveHosts') {
-						result = { success: true, registryAddress: config.registryAddress, note: 'Query registry hook state for hosts' };
-					}
-				} else if (resource === 'tenant') {
-					const address = this.getNodeParameter('address', i) as string;
+					const info = await getAccountInfo(this, config, address);
 					const objects = await makeXrplRequest(this, config, 'account_objects', [{ account: address, type: 'uri_token', ledger_index: 'validated' }]) as any;
-					result = { success: true, address, leases: objects?.account_objects || [] };
-				} else if (resource === 'lease') {
-					if (operation === 'getLeaseInfo') {
-						const tokenId = this.getNodeParameter('tokenId', i) as string;
-						const entry = await makeXrplRequest(this, config, 'ledger_entry', [{ uri_token: tokenId, ledger_index: 'validated' }]);
-						result = { success: true, tokenId, data: entry };
-					} else if (operation === 'calculateCost') {
-						const leaseAmount = this.getNodeParameter('leaseAmount', i) as number;
-						const moments = this.getNodeParameter('moments', i) as number;
-						const instanceCount = this.getNodeParameter('instanceCount', i) as number;
-						const validation = validateLeaseParams({ moments, instanceCount });
-						if (!validation.valid) throw new NodeOperationError(this.getNode(), validation.errors.join(', '), { itemIndex: i });
-						result = { success: true, cost: calculateLeaseCost({ leaseAmount, moments, instanceCount }), duration: calculateLeaseDuration(moments) };
-					}
-				} else if (resource === 'registry') {
-					if (operation === 'getRegistryInfo') {
-						result = { success: true, network: config.name, registryAddress: config.registryAddress, governorAddress: config.governorAddress, serverInfo: await getServerInfo(this, config) };
-					} else if (operation === 'getMomentInfo') {
-						const ledger = await getLedgerInfo(this, config) as any;
-						const idx = ledger?.ledger_index || 0;
-						result = { success: true, currentLedger: idx, momentSize: 1800, currentMoment: Math.floor(idx / 1800) };
-					}
-				} else if (resource === 'reputation') {
-					const score = this.getNodeParameter('reputationScore', i) as number;
-					const tier = getReputationTier(score);
-					result = { success: true, score, ...tier };
-				} else if (resource === 'moment') {
-					const ledger = await getLedgerInfo(this, config) as any;
-					const idx = ledger?.ledger_index || 0;
-					result = { success: true, currentLedger: idx, momentSize: 1800, currentMoment: Math.floor(idx / 1800), remainingLedgers: 1800 - (idx % 1800) };
-				} else if (resource === 'pricing') {
+					result = { success: true, address, accountInfo: info, uriTokens: objects?.account_objects || [] };
+				} else if (operation === 'getActiveHosts') {
+					result = { success: true, registryAddress: config.registryAddress, note: 'Query registry hook state for hosts' };
+				} else if (['getAllHosts', 'registerHost', 'updateHost', 'deregisterHost'].includes(operation)) {
+					// New host operations - will be handled by API operations below
+					throw new NodeOperationError(this.getNode(), `Operation "${operation}" requires API credentials`, { itemIndex: i });
+				}
+			} else if (resource === 'tenant') {
+				const address = this.getNodeParameter('address', i) as string;
+				const objects = await makeXrplRequest(this, config, 'account_objects', [{ account: address, type: 'uri_token', ledger_index: 'validated' }]) as any;
+				result = { success: true, address, leases: objects?.account_objects || [] };
+			} else if (resource === 'lease') {
+				if (operation === 'getLeaseInfo') {
+					const tokenId = this.getNodeParameter('tokenId', i) as string;
+					const entry = await makeXrplRequest(this, config, 'ledger_entry', [{ uri_token: tokenId, ledger_index: 'validated' }]);
+					result = { success: true, tokenId, data: entry };
+				} else if (operation === 'calculateCost') {
 					const leaseAmount = this.getNodeParameter('leaseAmount', i) as number;
 					const moments = this.getNodeParameter('moments', i) as number;
 					const instanceCount = this.getNodeParameter('instanceCount', i) as number;
-					result = { success: true, cost: calculateLeaseCost({ leaseAmount, moments, instanceCount }), duration: calculateLeaseDuration(moments), hourlyRate: formatPrice(calculateHourlyRate(leaseAmount)) };
-				} else if (resource === 'network') {
-					if (operation === 'getNetworkInfo') {
-						result = { success: true, network: config.name, xrplWsUrl: config.xrplWsUrl, registryAddress: config.registryAddress, evrIssuer: config.evrIssuer };
-					} else if (operation === 'getServerInfo') {
-						result = { success: true, serverInfo: await getServerInfo(this, config) };
-					}
-				} else if (resource === 'utility') {
-					if (operation === 'validateAddress') {
-						const addr = this.getNodeParameter('addressToValidate', i) as string;
-						result = { success: true, address: addr, valid: isValidXrplAddress(addr) };
-					} else if (operation === 'convertUnits') {
-						const amount = this.getNodeParameter('amount', i) as string;
-						const type = this.getNodeParameter('conversionType', i) as string;
-						result = { success: true, input: amount, output: type === 'dropsToXrp' ? dropsToXrp(amount) : String(Math.floor(Number(amount) * 1000000)), conversionType: type };
-					} else if (operation === 'getLedgerInfo') {
-						result = { success: true, ledgerInfo: await getLedgerInfo(this, config) };
-					}
+					const validation = validateLeaseParams({ moments, instanceCount });
+					if (!validation.valid) throw new NodeOperationError(this.getNode(), validation.errors.join(', '), { itemIndex: i });
+					result = { success: true, cost: calculateLeaseCost({ leaseAmount, moments, instanceCount }), duration: calculateLeaseDuration(moments) };
+				}
+			} else if (resource === 'registry') {
+				if (operation === 'getRegistryInfo') {
+					result = { success: true, network: config.name, registryAddress: config.registryAddress, governorAddress: config.governorAddress, serverInfo: await getServerInfo(this, config) };
+				} else if (operation === 'getMomentInfo') {
+					const ledger = await getLedgerInfo(this, config) as any;
+					const idx = ledger?.ledger_index || 0;
+					result = { success: true, currentLedger: idx, momentSize: 1800, currentMoment: Math.floor(idx / 1800) };
+				}
+			} else if (resource === 'reputation') {
+				if (operation === 'getReputationTier') {
+					const score = this.getNodeParameter('reputationScore', i) as number;
+					const tier = getReputationTier(score);
+					result = { success: true, score, ...tier };
+				} else if (['getAllReputations', 'getReputation', 'createReputationScore', 'updateReputation', 'getReputationHistory'].includes(operation)) {
+					// New reputation operations - will be handled by API operations below
+					throw new NodeOperationError(this.getNode(), `Operation "${operation}" requires API credentials`, { itemIndex: i });
+				}
+			} else if (resource === 'moment') {
+				const ledger = await getLedgerInfo(this, config) as any;
+				const idx = ledger?.ledger_index || 0;
+				result = { success: true, currentLedger: idx, momentSize: 1800, currentMoment: Math.floor(idx / 1800), remainingLedgers: 1800 - (idx % 1800) };
+			} else if (resource === 'pricing') {
+				const leaseAmount = this.getNodeParameter('leaseAmount', i) as number;
+				const moments = this.getNodeParameter('moments', i) as number;
+				const instanceCount = this.getNodeParameter('instanceCount', i) as number;
+				result = { success: true, cost: calculateLeaseCost({ leaseAmount, moments, instanceCount }), duration: calculateLeaseDuration(moments), hourlyRate: formatPrice(calculateHourlyRate(leaseAmount)) };
+			} else if (resource === 'network') {
+				if (operation === 'getNetworkInfo') {
+					result = { success: true, network: config.name, xrplWsUrl: config.xrplWsUrl, registryAddress: config.registryAddress, evrIssuer: config.evrIssuer };
+				} else if (operation === 'getServerInfo') {
+					result = { success: true, serverInfo: await getServerInfo(this, config) };
+				}
+			} else if (resource === 'utility') {
+				if (operation === 'validateAddress') {
+					const addr = this.getNodeParameter('addressToValidate', i) as string;
+					result = { success: true, address: addr, valid: isValidXrplAddress(addr) };
+				} else if (operation === 'convertUnits') {
+					const amount = this.getNodeParameter('amount', i) as string;
+					const type = this.getNodeParameter('conversionType', i) as string;
+					result = { success: true, input: amount, output: type === 'dropsToXrp' ? dropsToXrp(amount) : String(Math.floor(Number(amount) * 1000000)), conversionType: type };
+				} else if (operation === 'getLedgerInfo') {
+					result = { success: true, ledgerInfo: await getLedgerInfo(this, config) };
+				}
+			}
+
+			returnData.push({ json: result });
+		} catch (error: any) {
+			if (this.continueOnFail()) {
+				returnData.push({ json: { success: false, error: error instanceof Error ? error.message : 'Unknown error' } });
+				continue;
+			}
+			throw error;
+		}
+	}
+	return returnData;
+}
+
+async function executeInstanceOperations(
+	this: IExecuteFunctions,
+	items: INodeExecutionData[],
+): Promise<INodeExecutionData[]> {
+	const returnData: INodeExecutionData[] = [];
+	const operation = this.getNodeParameter('operation', 0) as string;
+	const credentials = await this.getCredentials('evernodeApi') as any;
+
+	for (let i = 0; i < items.length; i++) {
+		try {
+			let result: any;
+
+			switch (operation) {
+				case 'getAllInstances': {
+					const status = this.getNodeParameter('status', i) as string;
+					const hostAddress = this.getNodeParameter('hostAddress', i) as string;
+					const limit = this.getNodeParameter('limit', i) as number;
+					const offset = this.getNodeParameter('offset', i) as number;
+
+					const queryParams = new URLSearchParams();
+					if (status) queryParams.append('status', status);
+					if (hostAddress) queryParams.append('hostAddress', hostAddress);
+					if (limit) queryParams.append('limit', limit.toString());
+					if (offset) queryParams.append('offset', offset.toString());
+
+					const options: any = {
+						method: 'GET',
+						url: `${credentials.baseUrl}/instances?${queryParams.toString()}`,
+						headers: {
+							'Authorization': `Bearer ${credentials.apiKey}`,
+							'Content-Type': 'application/json',
+						},
+						json: true,
+					};
+
+					result = await this.helpers.httpRequest(options) as any;
+					break;
 				}
 
-				returnData.push({ json: result });
-			} catch (error) {
-				if (this.continueOnFail()) {
-					returnData.push({ json: { success: false, error: error instanceof Error ? error.message : 'Unknown error' } });
-					continue;
+				case 'getInstance': {
+					const instanceId = this.getNodeParameter('instanceId', i) as string;
+
+					const options: any = {
+						method: 'GET',
+						url: `${credentials.baseUrl}/instances/${instanceId}`,
+						headers: {
+							'Authorization': `Bearer ${credentials.apiKey}`,
+							'Content-Type': 'application/json',
+						},
+						json: true,
+					};
+
+					result = await this.helpers.httpRequest(options) as any;
+					break;
 				}
+
+				case 'createInstance': {
+					const hostAddress = this.getNodeParameter('hostAddress', i) as string;
+					const contractCode = this.getNodeParameter('contractCode', i) as string;
+					const memory = this.getNodeParameter('memory', i) as number;
+					const storage = this.getNodeParameter('storage', i) as number;
+					const duration = this.getNodeParameter('duration', i) as number;
+
+					const body = {
+						hostAddress,
+						contractCode,
+						memory,
+						storage,
+						duration,
+					};
+
+					const options: any = {
+						method: 'POST',
+						url: `${credentials.baseUrl}/instances`,
+						headers: {
+							'Authorization': `Bearer ${credentials.apiKey}`,
+							'Content-Type': 'application/json',
+						},
+						body,
+						json: true,
+					};
+
+					result = await this.helpers.httpRequest(options) as any;
+					break;
+				}
+
+				case 'updateInstance': {
+					const instanceId = this.getNodeParameter('instanceId', i) as string;
+					const memory = this.getNodeParameter('memory', i) as number;
+					const storage = this.getNodeParameter('storage', i) as number;
+
+					const body = {
+						memory,
+						storage,
+					};
+
+					const options: any = {
+						method: 'PATCH',
+						url: `${credentials.baseUrl}/instances/${instanceId}`,
+						headers: {
+							'Authorization': `Bearer ${credentials.apiKey}`,
+							'Content-Type': 'application/json',
+						},
+						body,
+						json: true,
+					};
+
+					result = await this.helpers.httpRequest(options) as any;
+					break;
+				}
+
+				case 'deleteInstance': {
+					const instanceId = this.getNodeParameter('instanceId', i) as string;
+
+					const options: any = {
+						method: 'DELETE',
+						url: `${credentials.baseUrl}/instances/${instanceId}`,
+						headers: {
+							'Authorization': `Bearer ${credentials.apiKey}`,
+							'Content-Type': 'application/json',
+						},
+						json: true,
+					};
+
+					result = await this.helpers.httpRequest(options) as any;
+					break;
+				}
+
+				default:
+					throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
+			}
+
+			returnData.push({
+				json: result,
+				pairedItem: { item: i },
+			});
+
+		} catch (error: any) {
+			if (this.continueOnFail()) {
+				returnData.push({
+					json: { error: error.message },
+					pairedItem: { item: i },
+				});
+			} else {
 				throw error;
 			}
 		}
-		return [returnData];
 	}
+
+	return returnData;
+}
+
+async function executeContractOperations(
+  this: IExecuteFunctions,
+  items: INodeExecutionData[],
+): Promise<INodeExecutionData[]> {
+  const returnData: INodeExecutionData[] = [];
+  const operation = this.getNodeParameter('operation', 0) as string;
+  const credentials = await this.getCredentials('evernodeApi') as any;
+
+  for (let i = 0; i < items.length; i++) {
+    try {
+      let result: any;
+
+      switch (operation) {
+        case 'getAllContracts': {
+          const status = this.getNodeParameter('status', i) as string;
+          const type = this.getNodeParameter('type', i) as string;
+          const limit = this.getNodeParameter('limit', i) as number;
+          const offset = this.getNodeParameter('offset', i) as number;
+
+          const queryParams = new URLSearchParams();
+          if (status) queryParams.append('status', status);
+          if (type) queryParams.append('type', type);
+          queryParams.append('limit', limit.toString());
+          queryParams.append('offset', offset.toString());
+
+          const options: any = {
+            method: 'GET',
+            url: `${credentials.baseUrl}/contracts?${queryParams.toString()}`,
+            headers: {
+              'Authorization': `Bearer ${credentials.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        case 'getContract': {
+          const contractId = this.getNodeParameter('contractId', i) as string;
+
+          const options: any = {
+            method: 'GET',
+            url: `${credentials.baseUrl}/contracts/${contractId}`,
+            headers: {
+              'Authorization': `Bearer ${credentials.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        case 'deployContract': {
+          const contractCode = this.getNodeParameter('contractCode', i) as string;
+          const name = this.getNodeParameter('name', i) as string;
+          const description = this.getNodeParameter('description', i) as string;
+          const parameters = this.getNodeParameter('parameters', i) as string;
+
+          let parsedParameters: any = {};
+          try {
+            parsedParameters = JSON.parse(parameters);
+          } catch (error: any) {
+            throw new NodeOperationError(this.getNode(), `Invalid JSON in parameters: ${error.message}`);
+          }
+
+          const options: any = {
+            method: 'POST',
+            url: `${credentials.baseUrl}/contracts`,
+            headers: {
+              'Authorization': `Bearer ${credentials.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: {
+              contractCode,
+              name,
+              description,
+              parameters: parsedParameters,
+            },
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        case 'updateContract': {
+          const contractId = this.getNodeParameter('contractId', i) as string;
+          const contractCode = this.getNodeParameter('contractCode', i) as string;
+          const parameters = this.getNodeParameter('parameters', i) as string;
+
+          let parsedParameters: any = {};
+          try {
+            parsedParameters = JSON.parse(parameters);
+          } catch (error: any) {
+            throw new NodeOperationError(this.getNode(), `Invalid JSON in parameters: ${error.message}`);
+          }
+
+          const options: any = {
+            method: 'PATCH',
+            url: `${credentials.baseUrl}/contracts/${contractId}`,
+            headers: {
+              'Authorization': `Bearer ${credentials.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: {
+              contractCode,
+              parameters: parsedParameters,
+            },
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        case 'deleteContract': {
+          const contractId = this.getNodeParameter('contractId', i) as string;
+
+          const options: any = {
+            method: 'DELETE',
+            url: `${credentials.baseUrl}/contracts/${contractId}`,
+            headers: {
+              'Authorization': `Bearer ${credentials.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        default:
+          throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
+      }
+
+      returnData.push({ json: result, pairedItem: { item: i } });
+
+    } catch (error: any) {
+      if (this.continueOnFail()) {
+        returnData.push({ json: { error: error.message }, pairedItem: { item: i } });
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  return returnData;
+}
+
+async function executeTransactionOperations(
+  this: IExecuteFunctions,
+  items: INodeExecutionData[],
+): Promise<INodeExecutionData[]> {
+  const returnData: INodeExecutionData[] = [];
+  const operation = this.getNodeParameter('operation', 0) as string;
+  const credentials = await this.getCredentials('evernodeApi') as any;
+
+  for (let i = 0; i < items.length; i++) {
+    try {
+      let result: any;
+
+      switch (operation) {
+        case 'getAllTransactions': {
+          const type = this.getNodeParameter('type', i) as string;
+          const status = this.getNodeParameter('status', i) as string;
+          const fromDate = this.getNodeParameter('fromDate', i) as string;
+          const toDate = this.getNodeParameter('toDate', i) as string;
+          const limit = this.getNodeParameter('limit', i) as number;
+          const offset = this.getNodeParameter('offset', i) as number;
+
+          const queryParams = new URLSearchParams();
+          if (type && type !== 'all') queryParams.append('type', type);
+          if (status && status !== 'all') queryParams.append('status', status);
+          if (fromDate) queryParams.append('fromDate', fromDate);
+          if (toDate) queryParams.append('toDate', toDate);
+          queryParams.append('limit', limit.toString());
+          queryParams.append('offset', offset.toString());
+
+          const options: any = {
+            method: 'GET',
+            url: `${credentials.baseUrl}/transactions?${queryParams.toString()}`,
+            headers: {
+              'Authorization': `Bearer ${credentials.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        case 'getTransaction': {
+          const txHash = this.getNodeParameter('txHash', i) as string;
+
+          const options: any = {
+            method: 'GET',
+            url: `${credentials.baseUrl}/transactions/${txHash}`,
+            headers: {
+              'Authorization': `Bearer ${credentials.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        case 'createTransaction': {
+          const amount = this.getNodeParameter('amount', i) as number;
+          const destination = this.getNodeParameter('destination', i) as string;
+          const memo = this.getNodeParameter('memo', i) as string;
+          const transactionType = this.getNodeParameter('transactionType', i) as string;
+
+          const body: any = {
+            amount,
+            destination,
+            type: transactionType,
+          };
+
+          if (memo) {
+            body.memo = memo;
+          }
+
+          const options: any = {
+            method: 'POST',
+            url: `${credentials.baseUrl}/transactions`,
+            headers: {
+              'Authorization': `Bearer ${credentials.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body,
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        case 'getBalance': {
+          const address = this.getNodeParameter('address', i) as string;
+
+          const options: any = {
+            method: 'GET',
+            url: `${credentials.baseUrl}/transactions/balance/${address}`,
+            headers: {
+              'Authorization': `Bearer ${credentials.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        case 'getTransactionHistory': {
+          const address = this.getNodeParameter('address', i) as string;
+          const limit = this.getNodeParameter('limit', i) as number;
+          const offset = this.getNodeParameter('offset', i) as number;
+
+          const queryParams = new URLSearchParams();
+          queryParams.append('limit', limit.toString());
+          queryParams.append('offset', offset.toString());
+
+          const options: any = {
+            method: 'GET',
+            url: `${credentials.baseUrl}/transactions/history/${address}?${queryParams.toString()}`,
+            headers: {
+              'Authorization': `Bearer ${credentials.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            json: true,
+          };
+
+          result = await this.helpers.httpRequest(options) as any;
+          break;
+        }
+
+        default:
+          throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
+      }
+
+      returnData.push({
+        json: result,
+        pairedItem: { item: i },
+      });
+    } catch (error: any) {
+      if (this.continueOnFail()) {
+        returnData.push({
+          json: { error: error.message },
+          pairedItem: { item: i },
+        });
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  return returnData;
 }
